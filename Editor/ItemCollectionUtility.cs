@@ -60,6 +60,9 @@ namespace WowUnity
             foreach (string record in records.Skip(1))
             {
                 string[] fields = record.Split(CSV_COLUMN_SEPERATOR);
+                if (fields.Length < 9)
+                    continue;
+
                 string doodadPath = Path.GetDirectoryName(PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(instantiatedPrefabGObj)) + Path.DirectorySeparatorChar + fields[0];
                 doodadPath = Path.GetFullPath(doodadPath);
                 doodadPath = $"Assets{Path.DirectorySeparatorChar}" + doodadPath.Substring(Application.dataPath.Length + 1); //This is so nifty :3
@@ -137,7 +140,6 @@ namespace WowUnity
                 TextAsset placementData = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
                 string prefabPath = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + Path.GetFileName(path).Replace("_ModelPlacementInformation.csv", ".obj");
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-                Debug.Log("" + prefabPath);
                 GenerateADT(prefab, placementData);
 
                 queuedPlacementInformationPaths.Remove(path);
