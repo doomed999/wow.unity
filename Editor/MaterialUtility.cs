@@ -43,6 +43,7 @@ namespace WowUnity
             if (Regex.IsMatch(Path.GetFileNameWithoutExtension(modelImportPath), @"adt_\d{2}_\d{2}"))
                 return ProcessADTMaterial(description, material, modelImportPath);
 
+            #if UNITY_UNIVERSAL_RP_12_0_0_OR_GREATER
             M2Utility.Material materialData = M2Utility.GetMaterialData(material.name, metadata);
             Color materialColor = Color.white;
             if (metadata != null && metadata.colors.Count > 0)
@@ -62,6 +63,8 @@ namespace WowUnity
             }
                 
             ProcessFlagsForMaterial(material, materialData);
+            #endif
+            
             return material;
         }
 

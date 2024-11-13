@@ -137,6 +137,7 @@ namespace WowUnity
                 TextAsset placementData = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
                 string prefabPath = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + Path.GetFileName(path).Replace("_ModelPlacementInformation.csv", ".obj");
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+                Debug.Log("" + prefabPath);
                 GenerateADT(prefab, placementData);
 
                 queuedPlacementInformationPaths.Remove(path);
