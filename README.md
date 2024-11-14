@@ -1,6 +1,6 @@
 # wow.unity
 
-**wow.unity** is a collection of shaders, asset postprocessors, and other tools aimed to make working with wow.export's exports fast and easy in Unity's URP Pipeline. With the click of a button, you will have a library of models and prefabs ready to drop directly into your scenes.
+**wow.unity** is a collection of shaders, asset postprocessors, and other tools aimed to make working with wow.export's exports fast and easy in Unity's Built-In and URP pipelines. With the click of a button, you will have a library of models and prefabs ready to drop directly into your scenes.
 
 
 ## Why use wow.unity?
@@ -12,6 +12,7 @@ This tool will get you \~80% of the way there when it comes to using wow.export 
 Importing assets and their metadata directly from wow.export, this plugin will automatically:
  - Apply alpha maps and textures to terrain tiles
  - Set basic shader settings for most objects
+ - Extract materials so they can be shared across models for performance
  - Generate texture animations for objects such as flames and waterfalls
  - Turn imported `.obj` files into prefabs
  - Populate WMOs and ADTs with doodads automatically
@@ -35,20 +36,22 @@ wow.export is an amazing tool, created and maintained by Kruithne. Please, do me
 You will require the following to use this package:
 
  - Unity 2021.1 or greater
- - Universal Render Pipeline (URP) 12.0 or greater
+ - You will need to use either:
+   - Unity's Built-In Render Pipeline
+   - Universal Render Pipeline (URP) 12.0 or greater
 
 ## Using this Package in a New Project
 
 If you're starting from scratch, it's never been easier to get started with wow.export in Unity:
 
- 1. Create a new Unity project using the 3D (URP) template.
+ 1. Create a new Unity project using the 3D (BiRP or URP) template.
  2. [Install this package using the package manager.](https://docs.unity3d.com/Manual/upm-ui-giturl.html)
  3. Create a folder in the Assets folder for your project to export to (eg: 'Assets/wow.export/').
  4. Open wow.export.
  5. Configure wow.export to export directly to the folder you created in the previous step.
  6. Begin exporting your assets.
 
-## Using this Package in an Existing URP Project
+## Using this Package in an Existing Project
 
 If you have already started a project and want to use this package, you will need to do the following:
 
