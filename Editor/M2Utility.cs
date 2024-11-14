@@ -37,13 +37,27 @@ namespace WowUnity
 
                 GameObject prefab = FindOrCreatePrefab(path);
 
-                if (metadata.textureTransforms.Count > 0 && metadata.textureTransforms[0].translation.timestamps.Count > 0)
+                Debug.Log("Processing metadata for: " + metadata.fileName);
+
+                try
                 {
-                    for (int i = 0; i < metadata.textureTransforms.Count; i++)
+
+                    if (metadata.textureTransforms.Count > 0 && metadata.textureTransforms[0].translation.timestamps.Count > 0)
                     {
-                        AnimationClip newClip = AnimationUtility.CreateAnimationClip(metadata.textureTransforms[i]);
-                        AssetDatabase.CreateAsset(newClip, Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path) + "[" + i +  "]" + ".anim");
+                        for (int i = 0; i < metadata.textureTransforms.Count; i++)
+                        {
+                            Debug.Log("Creating animation clips for: " + metadata.fileName);
+                            Debug.Log("Creating animation clip metadata.textureTransforms[i].translation.timestamps.Count: " + metadata.textureTransforms[i].translation.timestamps.Count);
+                            Debug.Log("Creating animation clip metadata.textureTransforms[i].translation.values.Count" + metadata.textureTransforms[i].translation.values.Count);
+                            AnimationClip newClip = AnimationUtility.CreateAnimationClip(metadata.textureTransforms[i]);
+                            AssetDatabase.CreateAsset(newClip, Path.GetDirectoryName(path) + "/" + Path.GetFileNameWithoutExtension(path) + "[" + i + "]" + ".anim");
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Failed to create animation clip for: " + metadata.fileName);
+                    Debug.LogError(e);
                 }
             }
 
@@ -141,7 +155,7 @@ namespace WowUnity
 
             //I have no idea why they sometimes don't match sizes.
             // I'm guessing if there's no material entry, default is intended.
-            for(int i = 0; i < metadata.textures.Count; i++)
+            for (int i = 0; i < metadata.textures.Count; i++)
             {
                 Texture texture = metadata.textures[i];
                 if (texture.mtlName != materialName)
@@ -149,7 +163,7 @@ namespace WowUnity
 
                 if (metadata.materials.Count <= i)
                     i = metadata.materials.Count - 1;
-                
+
                 data = metadata.materials[i];
                 break;
             }
