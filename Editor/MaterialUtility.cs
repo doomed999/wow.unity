@@ -13,9 +13,6 @@ namespace WowUnity
 {
     class MaterialUtility
     {
-        public const string LIT_SHADER = "Universal Render Pipeline/Simple Lit";
-        public const string UNLIT_SHADER = "Universal Render Pipeline/Unlit";
-        public const string EFFECT_SHADER = "Universal Render Pipeline/Particles/Unlit";
         public const string ADT_CHUNK_SHADER = "wow.unity/TerrainChunk";
 
         public enum MaterialFlags : short
@@ -44,72 +41,10 @@ namespace WowUnity
                 return ProcessADTMaterial(description, material, modelImportPath);
 
             #if UNITY_UNIVERSAL_RP_12_0_0_OR_GREATER
-            M2Utility.Material materialData = M2Utility.GetMaterialData(material.name, metadata);
-            Color materialColor = Color.white;
-            if (metadata != null && metadata.colors.Count > 0)
-            {
-                materialColor = ProcessMaterialColors(material, metadata);
-            }
-            
-            material.shader = Shader.Find(LIT_SHADER);
-            material.SetColor("_BaseColor", materialColor);
-
-            // Read a texture property from the material description.
-            TexturePropertyDescription textureProperty;
-            if (description.TryGetProperty("DiffuseColor", out textureProperty) && textureProperty.texture != null)
-            {
-                // Assign the texture to the material.
-                material.SetTexture("_MainTex", textureProperty.texture);
-            }
-                
-            ProcessFlagsForMaterial(material, materialData);
+                URPMaterialProcessor.ConfigureMaterial(description, material, modelImportPath, metadata);
             #endif
             
             return material;
-        }
-
-        public static void ProcessFlagsForMaterial(Material material, M2Utility.Material data)
-        {
-            //Flags first
-            if ((data.flags & (short)MaterialFlags.Unlit) != (short)MaterialFlags.None)
-            {
-                material.shader = Shader.Find(UNLIT_SHADER);
-            }
-
-            if ((data.flags & (short)MaterialFlags.TwoSided) != (short)MaterialFlags.None)
-            {
-                material.doubleSidedGI = true;
-                material.SetFloat("_Cull", 0);
-            }
-
-            //Now blend modes
-            if (data.blendingMode == (short)BlendModes.AlphaKey)
-            {
-                material.EnableKeyword("_ALPHATEST_ON");
-                material.SetFloat("_AlphaClip", 1);
-            }
-
-            if (data.blendingMode == (short)BlendModes.Alpha)
-            {
-                material.SetOverrideTag("RenderType", "Transparent");
-                material.SetFloat("_Blend", 0);
-                material.SetFloat("_Surface", 1);
-                material.SetFloat("_ZWrite", 0);
-            }
-
-            if (data.blendingMode == (short)BlendModes.Add)
-            {
-                material.SetOverrideTag("RenderType", "Transparent");
-                material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-                material.SetFloat("_Cutoff", 0);
-                material.SetFloat("_Blend", 1);
-                material.SetFloat("_Surface", 1);
-                material.SetFloat("_SrcBlend", 1);
-                material.SetFloat("_DstBlend", 1);
-                material.SetFloat("_ZWrite", 0);
-                material.SetShaderPassEnabled("ShadowCaster", false);
-            }
         }
 
         public static Color ProcessMaterialColors(Material material, M2Utility.M2 metadata)
